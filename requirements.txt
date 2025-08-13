@@ -1,0 +1,7 @@
+streamlit==1.32.0
+plotly==5.17.0
+pandas==2.1.4
+numpy==1.24.3
+Pillow==10.2.0
+datetime
+hashlib
