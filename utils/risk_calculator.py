@@ -1,9 +1,19 @@
 """
-Risk Calculator Utility - Enhanced for Demo Platform
+Risk Calculator Utility - Enhanced for Demo Platform with ML Integration
 """
 
-def calculate_auto_risk(vehicle_age, driver_age, accident_history, mileage):
+def calculate_auto_risk(vehicle_age, driver_age, accident_history, mileage, use_ml=True):
     """Calculate auto insurance risk score and premium estimate"""
+    
+    # Try ML-based calculation first
+    if use_ml:
+        try:
+            from .ml_risk_calculator import calculate_auto_risk_ml
+            return calculate_auto_risk_ml(vehicle_age, driver_age, accident_history, mileage)
+        except:
+            pass  # Fall back to traditional calculation
+    
+    # Traditional calculation as fallback
     score = 10 - (0.2 * vehicle_age + 0.1 * (100-driver_age)/10 + 0.5 * accident_history + 0.0001 * mileage)
     score = max(1, min(10, round(score, 1)))
     

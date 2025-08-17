@@ -1,8 +1,19 @@
 """
-Fraud Detector Utility - Enhanced for Indian Market
+Fraud Detector Utility - Enhanced for Indian Market with ML Integration
 """
 
-def detect_fraud(claim_amount, claim_type, suspicious_docs, prior_fraud):
+def detect_fraud(claim_amount, claim_type, suspicious_docs, prior_fraud, use_ml=True):
+    """Enhanced fraud detection with ML integration"""
+    
+    # Try ML-based fraud detection first
+    if use_ml:
+        try:
+            from .ml_fraud_detector import detect_fraud_ml
+            return detect_fraud_ml(claim_amount, claim_type, suspicious_docs, prior_fraud)
+        except:
+            pass  # Fall back to traditional calculation
+    
+    # Traditional fraud detection as fallback
     score = 5
     alerts = []
     

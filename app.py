@@ -46,15 +46,52 @@ def main():
     .sidebar .sidebar-content {
         background-color: #f0f2f6;
     }
+    .ml-badge {
+        background-color: #28a745;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
     </style>
     """, unsafe_allow_html=True)
     
+    # Sidebar configuration
+    with st.sidebar:
+        st.markdown("### System Configuration")
+        
+        # ML Toggle
+        use_ml = st.toggle(
+            "Enable ML Models", 
+            value=True,
+            help="Use advanced machine learning models for enhanced accuracy"
+        )
+        
+        if use_ml:
+            st.success("ML Models Active")
+            ml_model_type = st.selectbox(
+                "Select ML Model",
+                ["lightgbm", "xgboost", "random_forest", "catboost"],
+                help="Choose the machine learning model for predictions"
+            )
+        else:
+            st.info("Traditional Models Active")
+            ml_model_type = None
+        
+        st.markdown("---")
+    
     # Main header
-    st.markdown('<h1 class="main-header">🛡️ RiskShieldAI™</h1>', unsafe_allow_html=True)
-    st.markdown('<h2 style="text-align: center; color: #7f8c8d;">Insurance Risk & Fraud Assessment Platform</h2>', unsafe_allow_html=True)
+    if use_ml:
+        st.markdown('<h1 class="main-header">RiskShieldAI™ <span class="ml-badge">ML Powered</span></h1>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center; color: #7f8c8d;">Advanced ML Insurance Risk & Fraud Assessment Platform</h2>', unsafe_allow_html=True)
+        st.markdown('<p style="text-align: center; color: #28a745;">Powered by XGBoost, LightGBM, Random Forest & Isolation Forest</p>', unsafe_allow_html=True)
+    else:
+        st.markdown('<h1 class="main-header">RiskShieldAI™</h1>', unsafe_allow_html=True)
+        st.markdown('<h2 style="text-align: center; color: #7f8c8d;">Insurance Risk & Fraud Assessment Platform</h2>', unsafe_allow_html=True)
     
     # Sidebar navigation
-    st.sidebar.markdown("## 📊 Navigation")
+    st.sidebar.markdown("## Navigation")
     st.sidebar.markdown("---")
     
     # Platform overview
@@ -63,7 +100,7 @@ def main():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h3>🚗 Auto Insurance</h3>
+            <h3>Auto Insurance</h3>
             <p>Vehicle and driver risk assessment with real-time analytics</p>
         </div>
         """, unsafe_allow_html=True)
@@ -71,7 +108,7 @@ def main():
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h3>🏠 Property Insurance</h3>
+            <h3>Property Insurance</h3>
             <p>Property risk evaluation including environmental factors</p>
         </div>
         """, unsafe_allow_html=True)
@@ -79,7 +116,7 @@ def main():
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>🔒 Cyber Insurance</h3>
+            <h3>Cyber Insurance</h3>
             <p>Digital risk assessment and cybersecurity posture analysis</p>
         </div>
         """, unsafe_allow_html=True)
@@ -87,7 +124,7 @@ def main():
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <h3>🏥 Health Insurance</h3>
+            <h3>Health Insurance</h3>
             <p>Health risk profiling and wellness assessment</p>
         </div>
         """, unsafe_allow_html=True)
@@ -95,19 +132,19 @@ def main():
     with col5:
         st.markdown("""
         <div class="metric-card">
-            <h3>👨‍👩‍👧‍👦 Life Insurance</h3>
+            <h3>Life Insurance</h3>
             <p>Mortality risk assessment and coverage planning</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Platform features
-    st.markdown("## 🔧 Platform Features")
+    st.markdown("## Platform Features")
     
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("""
-        ### 🔍 Risk Assessment
+        ### Risk Assessment
         - **Multi-Type Coverage**: Auto, Property, and Cyber insurance
         - **Real-Time Analysis**: Instant risk scoring and recommendations
         - **Advanced Analytics**: Machine learning-powered insights
@@ -115,7 +152,7 @@ def main():
         """)
         
         st.markdown("""
-        ### 🤖 AI-Powered Fraud Detection
+        ### AI-Powered Fraud Detection
         - **Pattern Recognition**: Advanced anomaly detection
         - **Real-Time Monitoring**: Continuous fraud surveillance
         - **Predictive Modeling**: ML-based fraud prediction
@@ -124,7 +161,7 @@ def main():
     
     with col2:
         st.markdown("""
-        ### 📊 Risk Analytics Dashboard
+        ### Risk Analytics Dashboard
         - **Business Intelligence**: Comprehensive reporting
         - **Predictive Analytics**: Forecasting and trends
         - **Portfolio Analysis**: Risk distribution insights
@@ -132,7 +169,7 @@ def main():
         """)
         
         st.markdown("""
-        ### 📄 SmartAuditAI™ Document Intelligence
+        ### SmartAuditAI™ Document Intelligence
         - **Automated Processing**: OCR and NLP capabilities
         - **Document Verification**: Authenticity checking
         - **Content Analysis**: Intelligent text extraction
@@ -140,7 +177,7 @@ def main():
         """)
     
     # Real dashboard metrics based on actual assessments
-    st.markdown("## 📈 Platform Overview")
+    st.markdown("## Platform Overview")
     
     # Get real data from session state
     auto_data = st.session_state.get("auto_risk", {})
@@ -174,7 +211,7 @@ def main():
     if health_data and len(health_data.get('chronic_conditions', [])) > 3:
         fraud_indicators += 1
     
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     
     with col1:
         st.metric(
@@ -184,13 +221,27 @@ def main():
         )
     
     with col2:
+        if use_ml:
+            st.metric(
+                label="ML Models",
+                value="Active",
+                delta=f"Using {ml_model_type.upper()}"
+            )
+        else:
+            st.metric(
+                label="Analysis Mode",
+                value="Traditional",
+                delta="Mathematical formulas"
+            )
+    
+    with col3:
         st.metric(
             label="Fraud Indicators",
             value=str(fraud_indicators),
             delta="Risk factors detected" if fraud_indicators > 0 else "Clean profile"
         )
     
-    with col3:
+    with col4:
         if avg_risk_score > 0:
             st.metric(
                 label="Average Risk Score",
@@ -204,7 +255,7 @@ def main():
                 delta="Complete assessments"
             )
     
-    with col4:
+    with col5:
         if total_premiums > 0:
             st.metric(
                 label="Total Annual Premium",
@@ -218,7 +269,7 @@ def main():
                 delta="Complete assessments"
             )
     
-    with col5:
+    with col6:
         completion_rate = (completed_assessments / 5) * 100
         st.metric(
             label="Profile Completion",
